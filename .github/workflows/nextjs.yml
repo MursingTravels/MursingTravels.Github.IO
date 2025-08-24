@@ -1,11 +1,9 @@
-# Deploy Next.js site to GitHub Pages
-
 name: Deploy Next.js site to Pages
 
 on:
   push:
-    branches: ["main"]   # Run when pushing to main branch
-  workflow_dispatch:      # Allow manual runs
+    branches: ["main"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,18 +25,20 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18   # Next.js works well with Node 18+
+          node-version: 18
 
       - name: Install dependencies
         run: npm install --no-fund --no-audit
 
-      - name: Build project
-        run: npm run build
+      - name: Build and Export
+        run: |
+          npm run build
+          npm run export
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out   # for static Next.js export (npm run export puts files in /out)
+          path: ./out   # GitHub Pages will publish from the exported folder
 
   deploy:
     environment:
